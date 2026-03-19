@@ -1,5 +1,5 @@
-//This is the sequencer class 
-
+//This is the sequencer class - sits between sequence and driver and passes sequence items
+// provides TLM channel and arbitration mechanism
 class sequencer_g17 extends uvm_sequencer # (seqitem_g17);
 
 	`uvm_component_utils(sequencer_g17)
