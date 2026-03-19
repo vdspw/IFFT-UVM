@@ -3,10 +3,10 @@
 class ifft_g17 extends uvm_component;
 
 	`uvm_component_utils(ifft_g17)
-	uvm_blocking_put_port #(seqitem_g17) ifftsend; 
-	uvm_blocking_put_imp #(seqitem_g17, ifft_g17) ifftrec;
+	uvm_blocking_put_port #(seqitem_g17) ifftsend; // sends transaction to converdata
+	uvm_blocking_put_imp #(seqitem_g17, ifft_g17) ifftrec; //recieves transaction from encoder
 
-	real realtwid[64];
+	real realtwid[64]; // to stroe cosine /sine co-effiencents used during butterfly operations
 	real imagtwid[64];
 	int index;
 	int revindex;
@@ -65,9 +65,9 @@ class ifft_g17 extends uvm_component;
 
 	    virtual task put(ref seqitem_g17 mes1);
 			$display("----> Now IFFT Block Running <-----");
-			ifft(mes1);
+			ifft(mes1);  // recieve enocded spectrum and perfrom IFFT
 			#100;
-		 	ifftsend.put(mes1);
+			ifftsend.put(mes1); // forward the result
 		 	//$display("IFFT output: %0f", mes1.timeout);
 	    endtask
 		
@@ -96,13 +96,15 @@ class ifft_g17 extends uvm_component;
 			int spread = 2;
 			real temp_re, temp_img, v_re, v_im, real_a, img_a, real_b, img_b;
 			real max = 1e-15; 
-			
+
+		   // loads encoded spectrum into bit-reversed working order
 		  	 for (int i = 0; i < 128; i++) begin
 				int j = bitreversal(i);
 				wk[j].re = mes1.complexout[i].re;
 				wk[j].im = mes1.complexout[i].im;
 			end
 
+		   // butterfly stages
 			for (x = 0; x < 7; x++) begin
 				bs = 0;
 				while (bs<128) begin
@@ -112,7 +114,7 @@ class ifft_g17 extends uvm_component;
 						i2 = ix + spread/2;
 						temp_re = realtwid[twix];
 						temp_img = imagtwid[twix];
-
+						/* key equations */
 						v_re = wk[i2].re * temp_re - wk[i2].im * temp_img;
 						v_im = wk[i2].re * temp_img + wk[i2].im * temp_re;
 
@@ -143,7 +145,7 @@ class ifft_g17 extends uvm_component;
 			
 			i=0;
 			while (i<128) begin 
-				mes1.timeout[i].re = wk[i].re / 128;
+				mes1.timeout[i].re = wk[i].re / 128; // dived by 128 for IFFT normalization 
 				mes1.timeout[i].im = wk[i].im / 128;
 				mes1.timeout[i].im = ($abs(mes1.timeout[i].im) < max) ? 0 : mes1.timeout[i].im;
 				i++;
