@@ -1,12 +1,12 @@
 //This is the monitor out block where the data is sent to scoreboard 
-
+// Output monitor and is used actively 
 class monitor_dut_g17 extends uvm_monitor;
 
 	`uvm_component_utils(monitor_dut_g17)
 
 	virtual interface_g17 vir_int;
 	seqitem_g17 out;
-	uvm_analysis_port #(seqitem_g17) mono ;
+	uvm_analysis_port #(seqitem_g17) mono ; // sends observed DUT output to scoreboard
 
 	function new (string name = "monitor_dut_g17" , uvm_component parent = null);
 	    super.new(name,parent);
@@ -26,9 +26,9 @@ class monitor_dut_g17 extends uvm_monitor;
 	    `uvm_info("monitor_dut_g17","Inside Monitor_out Run Phase", UVM_NONE);
 	    forever begin
 	  	@(posedge vir_int.Clk);   
-		    if(vir_int.PushOut == 1)begin
-			out.PushOut = vir_int.PushOut;
-			out.DataOut = vir_int.DataOut;
+			if(vir_int.PushOut == 1)begin //wait for the valid output
+			out.PushOut = vir_int.PushOut; // capture DUT output word
+			out.DataOut = vir_int.DataOut; // forward it to scoreboard
 			$display("PushOut %0d   <-------->   DataOut %0h", out.PushOut ,out.DataOut);
 			mono.write(out); 
 		    end
