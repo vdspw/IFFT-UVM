@@ -2,7 +2,7 @@
 
 class scoreboard_g17 extends uvm_scoreboard;
 	`uvm_component_utils(scoreboard_g17)
-	uvm_tlm_analysis_fifo #(seqitem_g17) score;
+	uvm_tlm_analysis_fifo #(seqitem_g17) score; // recives exp output from decoder and actual output from monitor
 
 	function new (string name = "scoreboard_g17", uvm_component par);
 		super.new(name,par);
