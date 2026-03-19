@@ -1,17 +1,17 @@
 //This is the top module
 //By Group 17 - Nischal Dinesh (017268771), Gayatri Rane (017163575), Vishnudeep Pandurangarao (017269330) 
 
-import uvm_pkg::*;
+import uvm_pkg::*; // including the UVM package
 	`include "package_g17.sv" //Calling all the other modules is done in package_g17.sv
-import g17_pkg::*;
+import g17_pkg::*; // to get the testbench classes
 import uvm_pkg::*;
-`include "interface_g17.sv"
+`include "interface_g17.sv" // interface must be visible so top can instantiate
 	
 	module top_g17();
 		bit Clk, Reset;
 		interface_g17 vir_int(Clk, Reset);
 
-	initial begin
+	initial begin  // clocking and reset block 
 		Clk=0;
 		Reset=1;
 		#15;
@@ -23,11 +23,12 @@ import uvm_pkg::*;
 	end
 
    	initial begin
-	  uvm_config_db #(virtual interface_g17)::set(null,"*","virtual_interface",vir_int);
-	  run_test("test_g17");
+		uvm_config_db #(virtual interface_g17)::set(null,"*","virtual_interface",vir_int); //stores the interface handle in the UVM database, allows the drv and mon to retrive it using get method.
+		run_test("test_g17"); //starts the test
 	end
-	
-	ofdmdec dut1(
+
+		//instantiation of the DUT
+		ofdmdec dut1( 
 	      .Clk(Clk), 
 		.Reset(Reset), 
 		.Pushin(vir_int.Pushin), 
