@@ -1,5 +1,5 @@
 //This is package file which consists of all the call for blocks in the order of execution
-
+// package contains all the classes in the compile order
 package g17_pkg;
 
 	import uvm_pkg::*;
