@@ -1,5 +1,5 @@
 //This is the monitor in class which is at the sending stage
-
+// Input side monitor - not connected to the scoreboard
 class monitor_g17 extends uvm_monitor;
 
 	`uvm_component_utils(monitor_g17)
