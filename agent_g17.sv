@@ -1,5 +1,5 @@
 //This is the agent class which is used for connecting the various blocks 
-
+// this is active agent 
 class agent_g17 extends uvm_agent;
 
 	`uvm_component_utils(agent_g17)
