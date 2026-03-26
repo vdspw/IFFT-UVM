@@ -1,26 +1,26 @@
 //This is the IFFT Block, which is doing the ifft and bit reversal
 
-class ifft_g17 extends uvm_component;
+class ifft_g17 extends uvm_component; // class iift declared as uvm component
 
-	`uvm_component_utils(ifft_g17)
-	uvm_blocking_put_port #(seqitem_g17) ifftsend; 
-	uvm_blocking_put_imp #(seqitem_g17, ifft_g17) ifftrec;
+	`uvm_component_utils(ifft_g17) // factory registration to use build phase
+	uvm_blocking_put_port #(seqitem_g17) ifftsend; // put_port to send the data
+	uvm_blocking_put_imp #(seqitem_g17, ifft_g17) ifftrec; // implementation port to recieve the data from the encoder
 
-	real realtwid[64];
-	real imagtwid[64];
+	real realtwid[64]; // real portion of the twiddle factors
+	real imagtwid[64]; // imaginary factor of the twiddle factor
 	int index;
 	int revindex;
 	int i,j;
 	
-	 function new(string name = "ifft_g17", uvm_component parent = null);
+	function new(string name = "ifft_g17", uvm_component parent = null); //constructor
 			super.new(name, parent);
 		endfunction
 
 		
-	  function void build_phase(uvm_phase phase);
+	function void build_phase(uvm_phase phase); // build phase 
 		 super.build_phase(phase);
-		 ifftsend = new("ifftsend", this); 
-		 ifftrec = new("ifftrec", this); 
+		ifftsend = new("ifftsend", this); // building the ports put_port (send)
+		ifftrec = new("ifftrec", this); // building the ports put_imp (recive)
 		 twidfactors();
 	  endfunction
 		
